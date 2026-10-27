@@ -36,7 +36,7 @@ export type WomanLook = {
   outline: string;
   sash: string;
   hair: string;
-  hairStyle: "long" | "ponytail" | "curly";
+  hairStyle: "long" | "ponytail" | "curly" | "short-curly";
   clip?: "sunflower" | string; // hair flower: a sunflower or a blossom color
   greying?: boolean; // a few white strands through the hair
   smileLines?: boolean; // little creases at the corners of the mouth
@@ -88,6 +88,34 @@ export const KUNG: WomanLook = {
   greying: true,
   smileLines: true,
   crown: true,
+};
+export const KAEW: WomanLook = {
+  dress: ["#d94f70", "#f28aa5", "#c8435f"],
+  outline: "#b03552",
+  sash: "#ffffff",
+  hair: "#3a3330",
+  hairStyle: "short-curly",
+  greying: true,
+  smileLines: true,
+  crown: true,
+};
+export const SAK: ManLook = {
+  shirt: ["#7fd1b9", "#5fb8a0"],
+  sleeve: "#6fc5ac",
+  collar: "#eafaf4",
+  pants: "#e6d7b8",
+  hair: "#9a9a9a", // grey all over
+  hairStyle: "receding",
+  smileLines: true,
+  glasses: true,
+};
+export const JEM: ManLook = {
+  shirt: ["#ffb347", "#f59e2e"],
+  sleeve: "#fbaa3d",
+  collar: "#fff3e0",
+  pants: "#3e4a5c",
+  hair: "#21150f",
+  hairStyle: "quiff",
 };
 export const NOEY: WomanLook = {
   dress: ["#f07b93", "#ffb3c1", "#e86a85"],
@@ -330,6 +358,8 @@ export function drawWoman(ctx: Ctx, p: Pose, look: WomanLook, carry?: () => void
       ctx.fill();
     } else if (look.hairStyle === "ponytail") {
       ellipse(ctx, 44 + sway * 0.5, -280, 16, 42, 0.25 + sway * 0.02);
+    } else if (look.hairStyle === "short-curly") {
+      ellipse(ctx, 0, -294, 46, 38);
     } else {
       // Shoulder-length curls behind the head.
       ellipse(ctx, 0, -282, 50, 46);
@@ -414,14 +444,19 @@ export function drawWoman(ctx: Ctx, p: Pose, look: WomanLook, carry?: () => void
     ctx.fillRect(-8, -266, 16, 16);
     circle(ctx, 0, -293, 36);
 
-    if (look.hairStyle === "curly") {
+    if (look.hairStyle === "curly" || look.hairStyle === "short-curly") {
+      const short = look.hairStyle === "short-curly";
       curls(ctx, look.hair, 0.9, 2.1, look.greying);
-      // Curls framing the face down to the shoulders.
-      for (const side of [-1, 1]) {
-        circle(ctx, side * 42, -270, 12);
-        circle(ctx, side * 44 + sway * 0.3, -252, 11);
-      }
+      // Curls framing the face, down to the shoulders unless cut short.
       ctx.fillStyle = look.hair;
+      for (const side of [-1, 1]) {
+        if (short) {
+          circle(ctx, side * 40, -278, 11);
+        } else {
+          circle(ctx, side * 42, -270, 12);
+          circle(ctx, side * 44 + sway * 0.3, -252, 11);
+        }
+      }
       ctx.beginPath();
       ctx.arc(0, -296, 38, Math.PI * 1.1, Math.PI * 1.9);
       ctx.quadraticCurveTo(0, -310, -30, -318);
@@ -430,7 +465,7 @@ export function drawWoman(ctx: Ctx, p: Pose, look: WomanLook, carry?: () => void
         greyStrands(ctx, [
           [-22, -323, -10, -331, 4, -327],
           [10, -328, 22, -327, 28, -318],
-          [-44, -262, -47, -254, -42, -246],
+          short ? [-42, -284, -46, -278, -42, -272] : [-44, -262, -47, -254, -42, -246],
         ]);
       }
     } else {
