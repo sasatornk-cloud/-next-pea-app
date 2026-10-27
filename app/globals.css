@@ -10,6 +10,28 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --animate-heart-spin: heart-spin 6s linear infinite;
+
+  @keyframes heart-spin {
+    from {
+      transform: rotateY(0deg);
+    }
+    to {
+      transform: rotateY(360deg);
+    }
+  }
+
+  --animate-bouquet-sway: bouquet-sway 5s ease-in-out infinite alternate;
+
+  @keyframes bouquet-sway {
+    from {
+      transform: rotateY(-24deg);
+    }
+    to {
+      transform: rotateY(24deg);
+    }
+  }
 }
 
 @media (prefers-color-scheme: dark) {
